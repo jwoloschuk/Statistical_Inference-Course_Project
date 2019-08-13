@@ -77,7 +77,7 @@ is equal to the 1/lamda.
 mu <- 1/lamda
 ```
 
-In our example, mu is equal to 5
+In our example, mean (mu) is equal to 5
 
 While, the sample mean (X\_bar) is the average of the 1,000
 simululations of the 40 sampled exponentials.
@@ -87,11 +87,80 @@ simululations of the 40 sampled exponentials.
 X_bar <- mean(Expo_Matrix_Means$expo_means)
 ```
 
-From our simulations, we calculate that X\_bar is equal to 4.9900252
+From our simulations, we calculate that the sample mean (X\_bar) is
+equal to 4.9900252
 
-As expected, the sample mean (X\_bar) adn the theoretical mean (mu) are
+As expected, the sample mean (X\_bar) and the theoretical mean (mu) are
 very similar, with an absolute difference of only 0.0099748.
 
 ## Sample Variance versus Theoretical Variance:
 
+The theoretical varaince (Var) of a exponential distribution of rate
+lambda is equal to sigma^2. While, simga (standard deviation) is equal
+to 1/(sqrt(n)\*lamda)
+
+``` r
+# Calculation of the standard deviation
+sigma <- 1/(lamda*sqrt(n))
+
+# Calcualtion of the variance
+Var <- sigma**2
+```
+
+In our example, the variance (Var) is equal to 0.625, and the standard
+deviation is equal to 0.7905694.
+
+While, the sample varaince (Var\_sample) is varaince of the the average
+of the 1,000 simululations of the 40 sampled exponentials, with a
+standard deviation equal to sigma\_sample.
+
+``` r
+# Calculation of the sample standard deviation
+sigma_sample <- sd(Expo_Matrix_Means$expo_means)
+
+# Calcualtion of the sample variance
+Var_sample <- sigma_sample**2
+```
+
+From our simulations, we calculate the sample variance (Var\_sample) is
+equal to 0.6177072, and the sample standard deviation is equal to
+0.7859435.
+
+As expected, the sample variance (Var\_sample) and the theoretical
+variance (Var) are similar, with an absolute difference of only
+0.0072928.
+
 ## Distribution:
+
+We can get a sense if a distribution is is approximately normal by
+comparing the population mean and standard deviation, with a normal
+distribution of the expected values,
+
+``` r
+# Create new plot with two x-axis intercepts at the the sample mean (navy dotted)
+# and theoretical mean (purple dotted). 
+
+g_distribution <- ggplot(data = Expo_Matrix_Means, aes(x = expo_means)) + 
+        geom_histogram(aes(y=..density..), color = "navy", fill = "lightblue",
+                       binwidth = 0.25) +
+        geom_vline(xintercept = mu, size=2, colour="purple",linetype="dotted") + 
+        geom_vline(xintercept = X_bar, size=2, colour="navy",linetype="dotted") + 
+        # Add the distribution curves for the normal distribution (purple) 
+        # and for the simulation (navy)  theoretical mean (purple dotted) 
+        stat_function(fun = dnorm, args = list(mean = mu, sd = sigma), 
+                      colour = "purple", size=2) + 
+        geom_density(colour="navy", size=2) +
+        # Add scaling and labels
+        scale_x_continuous(breaks=seq(mu-4,mu+4,1), limits=c(mu-4,mu+4)) + 
+        ggtitle("Distribution of Exponential Means and Normal 
+                Distribution Curve") + xlab("Means") + ylab("Frequency") 
+
+g_distribution
+```
+
+![](Statistical_Inference_Course_Project-Part_1_files/figure-gfm/Distribution-1.png)<!-- -->
+
+From the previous chart, the estimated distribution of means of 40
+sampled exponantial distributions (navy line), overlaps fairly closely
+with the the the normal distribution (purple line) with the expected
+values based on the given lamba value of 0.2.
