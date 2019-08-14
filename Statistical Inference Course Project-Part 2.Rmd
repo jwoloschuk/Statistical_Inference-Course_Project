@@ -2,7 +2,7 @@
 title: 'Statistical Inference Course Project: Part 2'
 author: "Jordan Woloschuk"
 date: "8/13/2019"
-output: rmarkdown::github_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -51,16 +51,16 @@ ToothGrowth$dose <- as.factor(ToothGrowth$dose)
 In this section we will provide a basic summary of the ToothGrowth data.
 
 
-```{r Str_data}
-# Use str to display the structure of the data
-str(ToothGrowth)
+```{r summary_data}
+# Use summary to display a summary of the data
+summary(ToothGrowth)
 
 ```
 
 
-```{r summary_data}
-# Use summary to display a summary of the data
-summary(ToothGrowth)
+```{r Str_data}
+# Use str to display the structure of the data
+str(ToothGrowth)
 
 ```
 
@@ -72,3 +72,114 @@ head(ToothGrowth)
 tail(ToothGrowth)
 
 ```
+
+
+The following chart displays the total tooth length compared to the dose amount,
+split by the method of delivery
+
+```{r tooth_dose}
+
+# Plot of tooth lenth vs dosage, by delivery method
+g_len_dose <- ggplot(ToothGrowth, aes(dose,len))+geom_boxplot(aes(fill = dose))+
+        facet_grid(~supp) + ylab("Length of Tooth") + xlab("Dosage") +
+        ggtitle("Tooth Length and Dosage, by Delivery Method")
+
+g_len_dose
+```
+
+The following chart displays the total tooth length compared to the delivery
+method, split by the dosage.
+
+```{r tooth_supp}
+
+# Plot of tooth lenth vs supp, by dosage
+g_len_supp <- ggplot(ToothGrowth, aes(supp,len))+geom_boxplot(aes(fill = supp))+
+        facet_grid(~dose) + ylab("Length of Tooth") + xlab("Delivery Method") +
+        ggtitle("Tooth Length and Delivery Method, by Dosage")
+
+g_len_supp
+```
+
+
+## Comparison of Tooth Growth by Supplement Delivery Type
+
+I will use a T-test to compare the tooth growth length compared to the delivery
+method.
+
+```{r ttest_supp}
+
+# Run T-test
+supp_ttest <- t.test(data = ToothGrowth,len~supp)
+
+supp_ttest
+
+```
+
+From this T-test we can see that a P-value of `r supp_ttest$p.value` was
+calculated.This is greater than 0.05 and the confidence interval crosses over
+zero. Therefore we can surmise that the impact of supplement type is not a 
+significant factor in the tooth lengths observed.
+
+I will use a T-test to compare the tooth growth length compared to the dosage
+amount. This will be done by comparing the three combinations:   
+
+
+#### Dosages: 0.5 and 1.0  
+```{r ttest_d1}
+
+# Run T-test, with dosages: 0.5 and 1.0
+Subset_1 <- subset(ToothGrowth, ToothGrowth$dose %in% c(0.5,1.0))
+Subset_1tt <- t.test(data=Subset_1,len~dose)
+Subset_1tt
+
+```
+
+From this T-test we can see that a P-value of `r Subset_1tt$p.value` was
+calculated.
+
+#### Dosages: 0.5 and 2.0
+
+```{r ttest_d2}
+
+# Run T-test, with dosages: 0.5 and 2.0
+Subset_2 <- subset(ToothGrowth, ToothGrowth$dose %in% c(0.5,2.0))
+Subset_2tt <- t.test(data=Subset_2,len~dose)
+Subset_2tt
+
+```
+
+From this T-test we can see that a P-value of `r Subset_2tt$p.value` was
+calculated.
+
+#### Dosages: 1.0 and 2.0 
+
+```{r ttest_d3}
+
+# Run T-test, with dosages: 1.0 and 2.0
+Subset_3 <- subset(ToothGrowth, ToothGrowth$dose %in% c(1.0,2.0))
+Subset_3tt <- t.test(data=Subset_2,len~dose)
+Subset_3tt
+
+```
+
+From this T-test we can see that a P-value of `r Subset_3tt$p.value` was
+calculated.
+
+After reviewing the results from these three T-tests, we can see that all 
+p-value results are extremely small. The confidence intervals also do not cross
+over zero. Therefore we can surmise that the impact of the dosage is a 
+significant factor in the tooth lengths observed.
+
+
+## Conclusions and Assumptions
+
+Upon review of the data it can be seen taht the doseage amount will impact the 
+tooth growth length. From the data it can also be seen that as the dosage 
+increases, so too will the teeth length increase. However, the impact of the 
+supplement type does not appear to be significant; it is possible that a large 
+sample population would indicate otherwise. 
+
+The assumptions made during for this analysis are:   
+1. The sample observations are representative of the total population.   
+2. Dosages and the method of delivery were randomly assigned to participants.   
+3. The distribution of the means is normal and follows the Central Limit Theory    
