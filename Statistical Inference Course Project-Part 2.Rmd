@@ -1,0 +1,74 @@
+---
+title: 'Statistical Inference Course Project: Part 2'
+author: "Jordan Woloschuk"
+date: "8/13/2019"
+output: rmarkdown::github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Overview: 
+
+
+In this project I will analyze the ToothGrowth data contianed withing the
+R datasets package. This analysis will include four (4) main steps.
+
+* Load the ToothGrowth data and perform some basic exploratory data analyses
+* Provide a basic summary of the data.
+* Use confidence intervals and/or hypothesis tests to compare tooth growth by 
+supp and dose. 
+* State your conclusions and the assumptions needed for your conclusions.
+
+
+```{r Libraries, include=FALSE}
+# Load libraries
+library(ggplot2)
+```
+
+
+## Load the ToothGrowth Data
+
+In this section we will load the ToothGrowth data and perform some basic 
+exploratory data analyses.
+
+```{r Load}
+
+# Load ToothGrowth
+data("ToothGrowth")
+
+# Set the dose as a factor instead of the default num class. This is done for
+# future plots.
+ToothGrowth$dose <- as.factor(ToothGrowth$dose)
+
+
+```
+
+
+## Summary of the ToothGrowth data
+
+In this section we will provide a basic summary of the ToothGrowth data.
+
+
+```{r Str_data}
+# Use str to display the structure of the data
+str(ToothGrowth)
+
+```
+
+
+```{r summary_data}
+# Use summary to display a summary of the data
+summary(ToothGrowth)
+
+```
+
+
+```{r head_tail}
+# Use head and tail to show the first six (6) and last six(6) rows of data.
+head(ToothGrowth)
+
+tail(ToothGrowth)
+
+```
